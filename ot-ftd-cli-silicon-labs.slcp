@@ -1,0 +1,76 @@
+# Silicon Labs Project Configuration Tools: slcp, v0, Component selection file.
+project_name: ot-ftd-cli-silicon-labs
+label: ot-ftd-cli-silicon-labs
+description: |
+  This is a very simple CLI application to test the OpenThread stack on a Full Thread Device. This is equivalent to the ot-cli-ftd application in the OpenThread GitHub repo.
+category: OpenThread Examples
+filter:
+- name: Device Type
+  value: [SoC]
+- name: Project Difficulty
+  value: [Beginner]
+- name: Wireless Technology
+  value: [Thread]
+package: OpenThread
+quality: production
+readme:
+- {path: README.md}
+source:
+- {path: main.c}
+- {path: app.c}
+tag: [prebuilt_demo]
+include:
+- path: ''
+  file_list:
+  - {path: app.h}
+  - {path: reset_util.h}
+sdk: {id: gecko_sdk, version: 4.4.3}
+toolchain_settings: []
+component:
+- {id: EFR32MG24B210F1536IM48}
+- {id: bootloader_interface}
+- {id: brd4002a}
+- {id: brd4186c}
+- {id: ot_cert_libs}
+- {id: ot_cli_source}
+- {id: ot_coap_cert_libs}
+- {id: ot_crash_handler}
+- {id: ot_debug_channel}
+- {id: ot_rtt_log}
+- {id: ot_stack_ftd}
+- {id: rail_util_pti}
+- instance: [vcom]
+  id: uartdrv_usart
+configuration:
+- {name: SL_BOARD_ENABLE_VCOM, value: '1'}
+- {name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED, value: '1'}
+- {name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED, value: '1'}
+- condition: [freertos, uartdrv_usart]
+  name: UARTDRV_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+  value: '0'
+- condition: [freertos, iostream_usart]
+  name: SL_IOSTREAM_USART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+  value: '0'
+- condition: [iostream_usart]
+  name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
+  value: '128'
+- condition: [freertos]
+  name: SL_HEAP_SIZE
+  value: '16384'
+- {name: SL_STACK_SIZE, value: '4608'}
+- condition: [ot_rtt_log]
+  name: OPENTHREAD_CONFIG_LOG_OUTPUT
+  value: OPENTHREAD_CONFIG_LOG_OUTPUT_PLATFORM_DEFINED
+- condition: [ot_rtt_log]
+  name: BUFFER_SIZE_UP
+  value: '768'
+- condition: [ot_rtt_log, device_family_efr32mg1]
+  name: BUFFER_SIZE_UP
+  value: '128'
+- condition: [ot_rtt_log]
+  name: BUFFER_SIZE_DOWN
+  value: '0'
+ui_hints:
+  highlight:
+  - {path: ./README.md, focus: true}
+
