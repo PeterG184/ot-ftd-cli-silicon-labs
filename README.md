@@ -1,103 +1,34 @@
-# OpenThread CLI Example Applications
+# OpenThread CLI Setup
+Built on ot-ftd-mtd-cli example project. Setup required to flash ot-cli onto thread enabled device.
 
-The ot-cli-ftd and ot-cli-mtd example applications expose OpenThread configuration and management APIs via a simple command-line interface. The following are the minimal steps required to ping one Thread device from another Thread device.
+## Instructions:
 
-## 1. Start node 1 (ot-cli-ftd)
+1. Build program
+2. Flash to device
+3. Connect to device through serial interface. Batch controller available [here](https://github.com/PeterG184/sl-ot-controller)
 
-Generate, view, and commit a new Active Operational Dataset:
-
-```bash
-> dataset init new
-Done
-> dataset
-Active Timestamp: 1
-Channel: 13
-Channel Mask: 0x07fff800
-Ext PAN ID: d63e8e3e495ebbc3
-Mesh Local Prefix: fd3d:b50b:f96d:722d::/64
-Network Key: dfd34f0f05cad978ec4e32b0413038ff
-Network Name: OpenThread-8f28
-PAN ID: 0x8f28
-PSKc: c23a76e98f1a6483639b1ac1271e2e27
-Security Policy: 0, onrc
-Done
-> dataset commit active
-Done
-```
-
-Bring up the IPv6 interface:
-
+## Commands:
+Setup IPv6 Interface
 ```bash
 > ifconfig up
 Done
 ```
 
-Start Thread protocol operation:
-
+Start Thread Protocol:
 ```bash
 > thread start
 Done
 ```
 
-Wait a few seconds and verify that the device has become a Thread Leader:
-
+Check state of the thread device:
 ```bash
 > state
-leader
+[detached/child/router]
 Done
 ```
 
-View IPv6 addresses assigned to Node 1's Thread interface:
-
+Check all commands:
 ```bash
-> ipaddr
-fd3d:b50b:f96d:722d:0:ff:fe00:fc00
-fd3d:b50b:f96d:722d:0:ff:fe00:c00
-fd3d:b50b:f96d:722d:7a73:bff6:9093:9117
-fe80:0:0:0:6c41:9001:f3d6:4148
-Done
+> help
+...
 ```
-
-## 2. Start node 2 (ot-cli-ftd or ot-cli-mtd)
-
-Configure the Thread Network Key from Node 1's Active Operational Dataset:
-
-```bash
-> dataset networkkey dfd34f0f05cad978ec4e32b0413038ff
-Done
-> dataset commit active
-Done
-```
-
-Bring up the IPv6 interface:
-
-```bash
-> ifconfig up
-Done
-```
-
-Start Thread protocol operation:
-
-```bash
-> thread start
-Done
-```
-
-Wait a few seconds and verify that the device has become a Thread Child or Router:
-
-```bash
-> state
-child
-Done
-```
-
-## 3. Ping Node 1 from Node 2
-
-```bash
-> ping fd3d:b50b:f96d:722d:7a73:bff6:9093:9117
-16 bytes from fd3d:b50b:f96d:722d:558:f56b:d688:799: icmp_seq=1 hlim=64 time=24ms
-```
-
-## 4. Explore More
-
-See the CLI guide at **util/third_party/openthread/src/cli/README.md** to explore more.
